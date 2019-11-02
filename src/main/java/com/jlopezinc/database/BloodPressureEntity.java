@@ -3,26 +3,31 @@ package com.jlopezinc.database;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 
-@Entity(name = "blood_pressure")
+@Entity
+@Table(name="blood_pressure")
 public class BloodPressureEntity extends PanacheEntity {
-    public Integer user_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    public AccountEntity account;
+
     public Integer systolic;
     public Integer diastolic;
-    public Integer heartrate;
-    public Date created_on;
+    @Column(name = "heartrate")
+    public Integer heartRate;
+    @Column(name = "created_on")
+    public Date createdOn;
 
-    public static List<BloodPressureEntity> findByUserId (Integer userId){
-        return list("user_id", userId);
-    }
-
-    public static List<BloodPressureEntity> findByUserId (Integer userId, int page, int pageSize){
-        final PanacheQuery<BloodPressureEntity> user_id = BloodPressureEntity.find("user_id", userId);
-        return user_id.page(Page.of(page, pageSize)).list();
+    public static List<BloodPressureEntity> findByUserId (String userExternalId, int page, int pageSize){
+        return BloodPressureEntity.find("select bp from BloodPressureEntity bp inner join bp.account u where u.externalId = ?1", userExternalId)
+            .page(Page.of(page, pageSize)).list();
     }
 }

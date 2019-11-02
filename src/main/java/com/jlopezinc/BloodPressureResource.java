@@ -1,53 +1,59 @@
 package com.jlopezinc;
 
 import com.jlopezinc.database.BloodPressureEntity;
+import com.jlopezinc.database.AccountEntity;
 import com.jlopezinc.model.BloodPressure;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.enterprise.context.RequestScoped;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
-@Path("v1/bloodpressure/{uuid}")
+@Path("v1/bloodpressure/")
 @Produces("application/json")
 @Consumes("application/json")
-public class BloodPressureResource {
+@RequestScoped
+public class BloodPressureResource extends ResourceSupport {
 
     @GET
-    public List<BloodPressure> get(@PathParam("uuid") String uuid){
-        // todo map to user
-        int userId = 1;
-        return BloodPressureEntity.findByUserId(userId).stream().map(b -> {
+    public List<BloodPressure> get(@Context SecurityContext ctx, @QueryParam("page") @DefaultValue("0") int page, @QueryParam("pageSize") @DefaultValue("10") int pageSize){
+        String uuid = getUuid();
+        return BloodPressureEntity.findByUserId(uuid, page, pageSize).stream().map(b -> {
             BloodPressure bloodPressure = new BloodPressure();
-            bloodPressure.setCreatedOn(b.created_on);
+            bloodPressure.setCreatedOn(b.createdOn);
             bloodPressure.setSystolic(b.systolic);
             bloodPressure.setDiastolic(b.diastolic);
-            bloodPressure.setHeartrate(b.heartrate);
+            bloodPressure.setHeartrate(b.heartRate);
             return bloodPressure;
         }).collect(Collectors.toList());
     }
 
     @POST
     @Transactional
-    public Response post (@PathParam("uuid") String uuid, BloodPressure bloodPressure){
-        // todo map to user
-        int userId = 1;
+    public Response post (@Context SecurityContext ctx, BloodPressure bloodPressure){
+        String uuid = getUuid();
+        AccountEntity accountEntity = AccountEntity.findByExternal(uuid);
         BloodPressureEntity bloodPressureEntity = new BloodPressureEntity();
-        bloodPressureEntity.user_id = userId;
+        bloodPressureEntity.account = accountEntity;
         bloodPressureEntity.systolic = bloodPressure.getSystolic();
         bloodPressureEntity.diastolic = bloodPressure.getDiastolic();
-        bloodPressureEntity.heartrate = bloodPressure.getHeartrate();
-        bloodPressureEntity.created_on = new Date();
+        bloodPressureEntity.heartRate = bloodPressure.getHeartrate();
+        bloodPressureEntity.createdOn = new Date();
         BloodPressureEntity.persist(bloodPressureEntity);
 
         return Response.created(null).build();
     }
+
 }
