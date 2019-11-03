@@ -9,6 +9,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,6 +26,9 @@ public class AccountResource extends ResourceSupport {
     @Transactional
     public Account get(){
         final AccountEntity byExternal = AccountEntity.findByExternal(getUuid());
+        if (byExternal == null){
+            throw new NotFoundException();
+        }
         byExternal.lastLoginDate = new Date();
         Account account = new Account();
         account.setExternalId(byExternal.externalId);
@@ -32,6 +36,7 @@ public class AccountResource extends ResourceSupport {
     }
 
     @POST
+    @Transactional
     public Response create(){
         final String uuid = getUuid();
         AccountEntity ac = new AccountEntity();
