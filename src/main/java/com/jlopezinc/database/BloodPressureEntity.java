@@ -27,7 +27,13 @@ public class BloodPressureEntity extends PanacheEntity {
     public Date createdOn;
 
     public static List<BloodPressureEntity> findByUserId (String userExternalId, int page, int pageSize){
-        return BloodPressureEntity.find("select bp from BloodPressureEntity bp inner join bp.account u where u.externalId = ?1", userExternalId)
+        // equivalent to:
+        // select bp from BloodPressureEntity bp inner join bp.account u where u.externalId = ?1
+        return BloodPressureEntity.find("account.externalId", userExternalId)
             .page(Page.of(page, pageSize)).list();
+    }
+
+    public static long countByUserId(String userExternalId){
+        return BloodPressureEntity.count("account.externalId", userExternalId);
     }
 }

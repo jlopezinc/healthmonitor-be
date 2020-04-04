@@ -40,6 +40,14 @@ public class BloodPressureResource extends ResourceSupport {
         }).collect(Collectors.toList());
     }
 
+
+    @GET
+    @Path("count")
+    public long getCount(@Context SecurityContext ctx){
+        String uuid = getUuid();
+        return BloodPressureEntity.countByUserId(uuid);
+    }
+
     @POST
     @Transactional
     public Response post (@Context SecurityContext ctx, BloodPressure bloodPressure){
