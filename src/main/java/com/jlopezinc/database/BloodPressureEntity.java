@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 
 @Entity
 @Table(name="blood_pressure")
@@ -29,7 +30,7 @@ public class BloodPressureEntity extends PanacheEntity {
     public static List<BloodPressureEntity> findByUserId (String userExternalId, int page, int pageSize){
         // equivalent to:
         // select bp from BloodPressureEntity bp inner join bp.account u where u.externalId = ?1
-        return BloodPressureEntity.find("account.externalId", userExternalId)
+        return BloodPressureEntity.find("account.externalId", Sort.descending("createdOn"), userExternalId)
             .page(Page.of(page, pageSize)).list();
     }
 
