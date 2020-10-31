@@ -8,9 +8,13 @@ Health Monitor BE
 
 ## Local run with heroku postgres DB
 ```
-heroku run  -a healthmonitor-be echo \$JDBC_DATABASE_URL
+export JDBC_DATABASE_URL=$(heroku run  -a healthmonitor-be echo \$JDBC_DATABASE_URL); \
+./mvnw compile quarkus:dev -Dquarkus.datasource.jdbc.url=$JDBC_DATABASE_URL
+```
 
-JDBC_DATABASE_URL=<see heroku jdbc url from above> ./mvnw compile quarkus:dev -Dquarkus.datasource.url=$JDBC_DATABASE_URL
+Using heroku cli to get psql cli:
+```
+heroku pg:psql
 ```
 
 ## Heroku deploy
