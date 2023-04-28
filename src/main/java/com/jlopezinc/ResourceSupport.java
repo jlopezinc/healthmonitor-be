@@ -2,8 +2,8 @@ package com.jlopezinc;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import javax.inject.Inject;
-import javax.ws.rs.BadRequestException;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
 
 abstract class ResourceSupport {
     @Inject
