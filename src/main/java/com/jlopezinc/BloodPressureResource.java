@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -25,6 +26,7 @@ import jakarta.ws.rs.core.SecurityContext;
 @Produces("application/json")
 @Consumes("application/json")
 @RequestScoped
+@RegisterForReflection
 public class BloodPressureResource extends ResourceSupport {
 
     @GET

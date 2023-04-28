@@ -30,3 +30,19 @@ Deploy new version
 ```
 git push heroku master
 ```
+
+## Init database
+
+This uses flyway over mariadb.
+Installing a docker container example:
+```
+docker run --name mariadb10 -p 0.0.0.0:3307:3306  --env MARIADB_ROOT_PASSWORD=root -v /home/joao/.mysql_mariadb/data/mysql:/var/lib/mysql -v /home/joao/.mysql/data_maria:/etc/mysql/conf.d  mariadb
+```
+
+But you need to init the new database/schema and a user like this
+```
+sudo -u postgres psql
+postgres=# create database healthmonitor;
+postgres=# create user monitor with encrypted password 'monitor_user';
+postgres=# grant all privileges on database healthmonitor to monitor;
+```

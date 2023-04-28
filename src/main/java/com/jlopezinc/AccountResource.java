@@ -5,6 +5,7 @@ import com.jlopezinc.model.Account;
 
 import java.util.Date;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 @Produces("application/json")
 @Consumes("application/json")
 @RequestScoped
+@RegisterForReflection
 public class AccountResource extends ResourceSupport {
 
     @GET
