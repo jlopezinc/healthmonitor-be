@@ -46,3 +46,5 @@ postgres=# create database healthmonitor;
 postgres=# create user monitor with encrypted password 'monitor_user';
 postgres=# grant all privileges on database healthmonitor to monitor;
 ```
+
+Currently this is deployed using elephantsql, so the default user and schema was changed.
